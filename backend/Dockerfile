@@ -1,13 +1,20 @@
-FROM node:20-alpine
+# 1. Use a lightweight version of Node.js
+FROM node:18-alpine
 
-WORKDIR /usr/src/app
+# 2. Set the working directory inside the container
+WORKDIR /app
 
+# 3. Copy only the package files first (This makes building faster)
 COPY package*.json ./
 
-RUN npm install --omit=dev
+# 4. Install backend dependencies
+RUN npm install
 
+# 5. Copy the rest of your backend source code
 COPY . .
 
-EXPOSE 3000
+# 6. Expose the port your API runs on (Change if your app uses a different port)
+EXPOSE 5000
 
-CMD ["node", "index.js"]
+# 7. The command to start your backend
+CMD ["npm", "start"]
