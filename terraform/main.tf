@@ -1,10 +1,21 @@
 # devops/terraform/main.tf
 
+terraform {
+  required_version = ">= 1.0.0"
+
+  required_providers {
+    oci = {
+      source  = "hashicorp/oci"
+      version = "~> 4.0"
+    }
+  }
+}
+
 provider "oci" {
   tenancy_ocid     = var.tenancy_ocid
   user_ocid        = var.user_ocid
   fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
+  private_key_path = pathexpand(var.private_key_path)
   region           = var.region
 }
 
@@ -98,6 +109,6 @@ resource "oci_core_instance" "app_server" {
   }
 
   metadata = {
-    ssh_authorized_keys = file("~/.ssh/id_rsa.pub") 
+    ssh_authorized_keys = file(pathexpand(var.ssh_public_key_path))
   }
 }

@@ -21,6 +21,12 @@ variable "private_key_path" {
   default     = "~/.oci/oci_api_key.pem"
 }
 
+variable "ssh_public_key_path" {
+  type        = string
+  description = "Path to your SSH public key file for OCI instance access"
+  default     = "~/.ssh/id_rsa.pub"
+}
+
 variable "compartment_id" {
   type        = string
   description = "The Oracle Compartment ID"
