@@ -1,12 +1,9 @@
-# devops/terraform/main.tf
-
 terraform {
   required_version = ">= 1.0.0"
-
   required_providers {
     oci = {
-      source  = "hashicorp/oci"
-      version = "~> 4.0"
+      source  = "oracle/oci"
+      version = ">= 4.0"
     }
   }
 }
@@ -68,19 +65,28 @@ resource "oci_core_default_security_list" "main_security_list" {
   ingress_security_rules {
     protocol = "6" # TCP
     source   = "0.0.0.0/0"
-    tcp_options { max = 22, min = 22 }
+    tcp_options {
+      max = 22
+      min = 22
+    }
   }
 
   ingress_security_rules {
     protocol = "6" # TCP
     source   = "0.0.0.0/0"
-    tcp_options { max = 80, min = 80 }
+    tcp_options {
+      max = 80
+      min = 80
+    }
   }
 
   ingress_security_rules {
     protocol = "6" # TCP
     source   = "0.0.0.0/0"
-    tcp_options { max = 5000, min = 5000 }
+    tcp_options {
+      max = 5000
+      min = 5000
+    }
   }
 }
 
@@ -93,11 +99,13 @@ resource "oci_core_subnet" "main_subnet" {
 
 # --- Compute Instance ---
 resource "oci_core_instance" "app_server" {
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+  # NOTE: If your regional free tier allocation is assigned to a specific AD, 
+  # you can shift the index from [0] to [1] or [2] below if needed.
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
   compartment_id      = var.compartment_id
   shape               = "VM.Standard.E2.1.Micro"
   display_name        = "university_app_server"
-  
+
   create_vnic_details {
     subnet_id        = oci_core_subnet.main_subnet.id
     assign_public_ip = true

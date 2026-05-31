@@ -1,13 +1,19 @@
-# devops/terraform/variables.tf
-
 variable "tenancy_ocid" {
   type        = string
   description = "The OCID of your Oracle Cloud tenancy account"
+  validation {
+    condition     = can(regex("^ocid1\\.tenancy\\.", var.tenancy_ocid))
+    error_message = "tenancy_ocid must be a valid tenancy OCID starting with ocid1.tenancy."
+  }
 }
 
 variable "user_ocid" {
   type        = string
   description = "The OCID of your Oracle Cloud IAM user"
+  validation {
+    condition     = can(regex("^ocid1\\.user\\.", var.user_ocid))
+    error_message = "user_ocid must be a valid user OCID starting with ocid1.user."
+  }
 }
 
 variable "fingerprint" {
@@ -30,10 +36,14 @@ variable "ssh_public_key_path" {
 variable "compartment_id" {
   type        = string
   description = "The Oracle Compartment ID"
+  validation {
+    condition     = can(regex("^ocid1\\.compartment\\.", var.compartment_id))
+    error_message = "compartment_id must be a valid compartment OCID starting with ocid1.compartment."
+  }
 }
 
 variable "region" {
   type        = string
   description = "The OCI region"
-  default     = "us-ashburn-1" # Change this if your region is different
+  default     = "eu-frankfurt-1" 
 }
